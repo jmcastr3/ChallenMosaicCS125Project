@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
             //Get the picture as a bitmap and store it in the instance variable.
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            System.out.print("Is mutable: ");
-            System.out.println(imageBitmap.isMutable());
+            //System.out.print("Is mutable: ");
+            //System.out.println(imageBitmap.isMutable());
             userImage = imageBitmap;
             height = userImage.getHeight();
             width = userImage.getWidth();
@@ -163,25 +163,24 @@ public class MainActivity extends AppCompatActivity {
         picBitMap.clear();
         picPixels.clear();
 
-        //Parse through the pictureArray and get a scaled down bitmap for use in the mosaic.
+        //Parse through the pictureArray and make all bitmaps the same size
         for (int i: pictureArray) {
             Bitmap bitPic = ((BitmapDrawable) getDrawable(i)).getBitmap();
-            //int scaledHeight = (height / SCALE);
-            //int scaledWidth = (width / SCALE);
-            //bitPic = bitPic.createScaledBitmap(bitPic, scaledWidth, scaledHeight, true);
-            //bitPic = bitPic.createScaledBitmap(bitPic, 1, 1, true);
+            bitPic = bitPic.createScaledBitmap(bitPic, width, height, true);
             Bitmap mutableBitPic = bitPic.createBitmap(bitPic.getWidth(), bitPic.getHeight(),
                     bitPic.getConfig());
             picBitMap.put(i, mutableBitPic);
         }
 
-        //Parse through the recently made bitmap dictionary and get a pixel array of the scaled down images.
+        //Parse through the recently made bitmap dictionary and get a pixel array of the scaled images.
         //Add the pixel array to a new dictionary.
         for (Map.Entry<Integer, Bitmap> entry: picBitMap.entrySet()) {
             int[] pixelArray = new int[entry.getValue().getWidth()*entry.getValue().getHeight()];
+            int pixel = 0;
             for (int y = 0; y < entry.getValue().getHeight(); y++) {
                 for (int x = 0; x < entry.getValue().getWidth(); x++) {
-                    pixelArray[x] = entry.getValue().getPixel(x, y);
+                    pixelArray[pixel] = entry.getValue().getPixel(x, y);
+                    pixel += 1;
                 }
             }
             picPixels.put(entry.getKey(), pixelArray);
@@ -196,16 +195,24 @@ public class MainActivity extends AppCompatActivity {
             avgColor.put(entry.getKey(), averageColor);
         }
 
+        int scaledHeight = (height * SCALE);
+        int scaledWidth = (width * SCALE);
+
+        Bitmap scaledImage = userImage.createScaledBitmap(userImage, scaledWidth, scaledHeight, true);
+        Bitmap mutableScaledImage = scaledImage.createBitmap(scaledImage.getWidth(), scaledImage.getHeight(),
+                scaledImage.getConfig());
 
         //Create the mosaic
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                userImage.setPixel(x, y, compare(userImage.getPixel(x, y)));
+        for (int y = 0; y < SCALE; y++) {
+            for (int x = 0; x < SCALE; x++) {
+                mutableScaledImage.setPixels(picPixels.get(R.drawable.picture1), 0, width,
+                        x*width, y*height, width, height);
+                //mutableScaledImage.setPixel(x, y, compare(mutableScaledImage.getPixel(x, y)));
                 //userImage.setPixels(picPixels.get(R.drawable.picture1), 0, 4, x, y, 4, 4);
             }
         }
 
-        //userImage = picBitMap.get(R.drawable.picture1).copy(userImage.getConfig(), true);
+        userImage = mutableScaledImage.createScaledBitmap(mutableScaledImage, width, height, true);
 
         /**
         System.out.println(picPixels.get(R.drawable.picture1));
