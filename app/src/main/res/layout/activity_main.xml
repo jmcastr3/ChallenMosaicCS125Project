@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/takePicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Take Picture"
+            android:visibility="visible"
+            tools:text="Take Picture" />
+
+        <Button
+            android:id="@+id/randomChallen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Random Challen"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/challen"
+            android:layout_width="match_parent"
+            android:layout_height="440dp"
+            android:visibility="invisible"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <Button
+            android:id="@+id/convertChallen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Convert into Challens"
+            android:visibility="invisible"
+            tools:text="Convert into Challens" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
